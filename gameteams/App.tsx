@@ -3,7 +3,7 @@ import {ThemeProvider} from 'styled-components/native'
 import theme from './src/theme/index';
 import {useFonts, Roboto_400Regular, Roboto_700Bold} from '@expo-google-fonts/roboto'
 
-import {Groups} from '@screens/Groups'
+import {NewGroup} from '@screens/NewGroup'
 import {Loading} from '@components/Loading'
 
 
@@ -13,12 +13,14 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <StatusBar 
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent
-      />
-       {fontsLoaded ? <Groups /> : <Loading />}
+      <>
+        <StatusBar 
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
+        {fontsLoaded ? <NewGroup /> : <Loading />}
+      </>
     </ThemeProvider>
    
   );
