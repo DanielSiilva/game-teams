@@ -1,5 +1,5 @@
 import {ThemeProvider} from 'styled-components/native'
-import theme from '@theme/index';
+import theme from './src/theme/index';
 import {Groups} from '@screens/Groups'
 
 
