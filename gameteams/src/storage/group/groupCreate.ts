@@ -6,8 +6,10 @@ import { groupsGetAll } from './groupGetAll';
 export async function groupCreate(newGroup: string) {
   try {
     const storedGroups = await groupsGetAll();
+    const storage = JSON.stringify([...storedGroups, newGroup])
+    
                               // Chave, valor => Precisa ser uma string
-    await AsyncStorage.setItem(GROUP_COLLECTION, newGroup);
+    await AsyncStorage.setItem(GROUP_COLLECTION, storage);
   } catch (error) {
     throw error;
   }
