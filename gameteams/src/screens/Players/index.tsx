@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { FlatList, Alert } from 'react-native'
+import { useState, useEffect, useRef } from 'react';
+import { FlatList, Alert, TextInput } from 'react-native'
 import { useRoute } from '@react-navigation/native';
 
 import { AppError } from '@utils/AppError';
@@ -28,8 +28,10 @@ export function Players() {
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
 
   const route = useRoute();
-
   const { group } = route.params as RouteParams;
+
+  const newPlayerNameInputRef = useRef<TextInput>(null);
+
   async function handleAddPlayer() {
     if(newPlayerName.trim().length === 0) {
       return Alert.alert('Nova pessoa', 'Informe o nome da pessoa para adicionar.');
@@ -41,7 +43,12 @@ export function Players() {
 
     try {
       await playerAddByGroup(newPlayer, group);
+
+      newPlayerNameInputRef.current?.blur();
+
+      setNewPlayerName('');
       await fetchPlayersByTeam();
+
     } catch (error) {
       if(error instanceof AppError){
         Alert.alert('Nova pessoa', error.message);
@@ -51,6 +58,7 @@ export function Players() {
       }
     }
   }
+
   async function fetchPlayersByTeam() {
     try {
       const playersByTeam = await playersGetByGroupAndTeam(group, team);
@@ -77,6 +85,10 @@ export function Players() {
           placeholder="Nome da pessoa"
           autoCorrect={false}
           onChangeText={setNewPlayerName}
+          value={newPlayerName}
+          inputRef={newPlayerNameInputRef}
+          onSubmitEditing={handleAddPlayer}
+          returnKeyType='done'
         />
         <ButtonIcon 
           icon="add"
@@ -116,6 +128,7 @@ export function Players() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
       />
+
       <Button 
         title="Remover Turma"
         type="SECONDARY"
