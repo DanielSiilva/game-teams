@@ -6,6 +6,7 @@ import { AppError } from '@utils/AppError';
 import { PlayerStorageDTO } from '@storage/player/PlayerStorageDTO';
 import { playerAddByGroup } from '@storage/player/playerAddByGroup';
 import { playersGetByGroupAndTeam } from '@storage/player/playersGetByGroupAndTeam';
+import { playerRemoveByGroup } from '@storage/player/playerRemoveByGroup';
 
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
@@ -17,6 +18,7 @@ import { ListEmpty } from '@components/ListEmpty';
 import { Button } from '@components/Button';
 
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
+
 
 type RouteParams = {
   group: string;
@@ -66,6 +68,16 @@ export function Players() {
     } catch (error) {
       console.log(error);
       Alert.alert('Pessoas', 'Não foi possível carregar as pessoas do time selecionado.');
+    }
+  }
+
+  async function fetchPlayerRemove(playerName:string) {
+    try {
+      await playerRemoveByGroup(playerName, group);
+      fetchPlayersByTeam();
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Remover Pessoa', 'Não foi possivel remover essa pessoa')
     }
   }
 
@@ -119,7 +131,7 @@ export function Players() {
         renderItem={({ item }) => (
           <PlayerCard 
             name={item.name} 
-            onRemove={() => {}}
+            onRemove={() => fetchPlayerRemove(item.name)}
           />
         )}
         ListEmptyComponent={() => (
